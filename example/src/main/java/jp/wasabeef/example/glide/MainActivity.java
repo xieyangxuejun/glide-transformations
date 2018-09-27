@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     List<Type> dataSet = new ArrayList<>();
+    dataSet.add(Type.Watermark);
     dataSet.add(Type.Mask);
     dataSet.add(Type.NinePatchMask);
     dataSet.add(Type.CropTop);

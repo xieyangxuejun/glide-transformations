@@ -1,6 +1,7 @@
 package jp.wasabeef.example.glide;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import jp.wasabeef.glide.transformations.GrayscaleTransformation;
 import jp.wasabeef.glide.transformations.MaskTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import jp.wasabeef.glide.transformations.SupportRSBlurTransformation;
+import jp.wasabeef.glide.transformations.WatermarkTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 import jp.wasabeef.glide.transformations.gpu.ContrastFilterTransformation;
 import jp.wasabeef.glide.transformations.gpu.InvertFilterTransformation;
@@ -38,6 +41,7 @@ import jp.wasabeef.glide.transformations.gpu.ToonFilterTransformation;
 import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 import static com.bumptech.glide.request.RequestOptions.overrideOf;
 
 /**
@@ -49,6 +53,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
   private List<Type> dataSet;
 
   enum Type {
+    Watermark,
     Mask,
     NinePatchMask,
     CropTop,
@@ -85,6 +90,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
   @Override public void onBindViewHolder(MainAdapter.ViewHolder holder, int position) {
     switch (dataSet.get(position)) {
+      case Watermark: {
+        Glide.with(context)
+                .load(R.drawable.demo)
+                .apply(bitmapTransform(new WatermarkTransformation(10,
+                        BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher),
+                        WatermarkTransformation.Gravity.BOTTOM_END)))
+                .apply(diskCacheStrategyOf(DiskCacheStrategy.NONE))
+                .into(holder.image);
+        break;
+      }
       case Mask: {
         int width = Utils.dip2px(context, 266.66f);
         int height = Utils.dip2px(context, 252.66f);
